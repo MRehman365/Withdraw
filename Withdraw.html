@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .main-container {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            font-family: sans-serif;
+            overflow-x: hidden;
+        }
+        .mobile-view {
+            width: 33.333333%;
+            overflow-x: hidden;
+        }
+        .nav-top {
+            position: relative;
+            height: 44px;
+            text-align: center;
+            background-color: #0093ff;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+        .nav-top h2 {
+            position: absolute;
+            color: #ffffff;
+            top: -10px;
+        }
+        .nav-top p {
+            position: absolute;
+            left: 80%;
+            color: white;
+        }
+        .balance {
+            overflow-x: hidden;
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .balance h2 {
+            font-size: 30px;
+            position: relative;
+            top: -25px;
+        }
+        .balance p {
+            font-size: 20px;
+        }
+        .img {
+            overflow-x: hidden;
+            width: 100%;
+        }
+        .gray {
+            width: 90%;
+            height: 100px;
+            margin-left: 5%;
+            background-color: rgb(208, 235, 255);
+            border-radius: 5px;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .img p {
+            margin-left: 5%;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .img input {
+            width: 90%;
+            margin-left: 5%;
+            border: none;
+            border-bottom: 1px solid black;
+            font-size: 40px;
+        }
+        .amount1 {
+            overflow-x: hidden;
+            display: flex;
+            justify-content: space-between;
+            gap: 0px;
+            margin-right: 20px;
+        }
+        .amount1 p {
+            font-weight: normal;
+            font-size: 15px;
+        }
+        button {
+            width: 90%;
+            height: 50px;
+            margin-left: 5%;
+            background-color: #0093ff;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+        .OTP{
+            width: 100%;
+            overflow: hidden;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .OTP input{
+            font-size: 25px;
+            width: 220px;
+            
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+         }
+        .OTP input::after{
+            font-size: 25px;
+            border: none;
+            box-shadow: none;
+        }
+        .otp-btn{
+            margin-right: 20px;
+            height: 50px;
+            width: 150px;
+            font-size: 17px;
+            box-shadow: 0px 0px 0px white;
+        }
+        .otp-btn.disabled {
+    pointer-events: none; 
+    opacity: 0.5; 
+}
+        @media (max-width: 1024px) {
+            .mobile-view {
+                width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="mobile-view">
+            <div class="nav-top">
+                <h2>Withdraw</h2>
+                <p>Records</p>
+            </div>
+            <div class="balance">
+                <p>Balance</p>
+                <h2 id="balance">0</h2>
+            </div>
+            <div class="img">
+                <div  class="gray" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p id="gray1"></p>
+                    <p id="gray2"></p>
+                </div>
+                <p>Amount</p>
+                <input type="number" placeholder="330 ~ 50000">
+                <div class="OTP">
+                    <input type="number" placeholder="Enter OTP">
+                    <button class="otp-btn">Get OTP</button>
+                </div>
+                <div class="amount1">
+                    <p>Amount < 1500 fee 30 </p>
+                    <p>Maximum 1000 </p>
+                </div>
+                <div class="amount1">
+                    <p>Amount => 1500 fee 3% </p>
+                    <p>Minimum 330 </p>
+                </div>
+                <p style="font-size: 15px; font-weight: normal;">withdraw timing instant withdraw</p>
+            </div>
+            <button>Withdraw</button>
+        </div>
+    </div>
+
+    <script>
+        const userId = '9876543210';
+        const action = 'bankcard';
+        const url = `https://angelwin.in/theninja/src/api/bet.php?action=${action}&user=${userId}`;
+
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.length > 0 && data[0].account && data[0].account !== "") {
+                document.getElementById('balance').innerText = data[0].balance;
+                document.getElementById('gray1').innerText = "Account: " + data[0].account;
+                document.getElementById('gray2').innerText = "PayTM: " + data[0].paytm;
+            } else {
+                console.log('No bank account added. Redirecting to add bank account page.');
+                document.getElementById('gray1').innerText = "No bank account added. Redirecting to add bank account page.";
+                window.location.href = '';
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+
+        // user name and detail
+
+        const usernumber = '9876543210';
+const action2 = 'getuserinfo';
+const url2 = `https://angelwin.in/theninja/src/api/me.php?action=${action2}&user=${usernumber}`;
+
+fetch(url2, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error('Network response was not ok ' + response.statusText);
+  }
+  return response.json();
+})
+.then(data => {
+  console.log('User Info:', data);
+})
+.catch(error => {
+  console.error('There was a problem with the fetch operation:', error);
+});
+
+// button count down
+document.addEventListener("DOMContentLoaded", function() {
+    const otpBtn = document.querySelector('.otp-btn');
+    let countdown;
+
+    otpBtn.addEventListener('click', function() {
+        // Disable the button
+        otpBtn.disabled = true;
+        otpBtn.classList.add('disabled'); // Add disabled class
+
+        // Set countdown time to 60 seconds
+        let secondsLeft = 60;
+        countdown = setInterval(function() {
+            if (secondsLeft <= 0) {
+                clearInterval(countdown);
+                otpBtn.innerText = 'Get OTP';
+                otpBtn.disabled = false;
+                otpBtn.classList.remove('disabled'); // Remove disabled class
+            } else {
+                otpBtn.innerText = `Resend OTP (${secondsLeft}s)`;
+                secondsLeft--;
+            }
+        }, 1000);
+    });
+});
+    </script>
+</body>
+</html>
